@@ -20,6 +20,17 @@ CREATE TABLE IF NOT EXISTS readings (
 -- 日结常用过滤索引
 CREATE INDEX IF NOT EXISTS idx_readings_time ON readings (read_time);
 
+-- ---------- 采集员补传的回执 ----------
+-- 每个批次号一行；与 readings 的写入在同一事务内提交。
+-- 同批次同内容重试直接返回本表原值，不回写 readings。
+CREATE TABLE IF NOT EXISTS ingestion_receipts (
+    batch_id     text PRIMARY KEY,
+    content_hash text NOT NULL,
+    inserted     integer NOT NULL CHECK (inserted >= 0),
+    existing     integer NOT NULL CHECK (existing >= 0),
+    created_at   timestamptz NOT NULL DEFAULT now()
+);
+
 -- ---------- 示例档案：3 条产线、6 块表 ----------
 INSERT INTO meters (meter_id, line_name) VALUES
     (1001, 'A线'),

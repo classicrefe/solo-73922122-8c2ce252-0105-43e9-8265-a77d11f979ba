@@ -28,6 +28,9 @@ class Settings:
     statement_timeout_ms: int = _env_int("PG_STATEMENT_TIMEOUT_MS", 28000)
     lock_timeout_ms: int = _env_int("PG_LOCK_TIMEOUT_MS", 2000)
     idle_in_tx_timeout_ms: int = _env_int("PG_IDLE_IN_TX_TIMEOUT_MS", 60000)
+    # 批量接入的锁等待上限：等待超时整批回滚、可安全重试。
+    # 必须小于 statement_timeout，确保先以明确的“并发冲突”语义返回。
+    ingest_lock_timeout_ms: int = _env_int("INGEST_LOCK_TIMEOUT_MS", 20000)
 
     # 每轮核对的硬性时限（秒）
     job_timeout_seconds: int = _env_int("JOB_TIMEOUT_SECONDS", 30)

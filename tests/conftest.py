@@ -56,6 +56,18 @@ def _init_schema(pg_dsn: str) -> None:
 
 
 @pytest.fixture()
+def db_conn(pg_dsn):
+    """直连数据库的连接（模拟“直连 SQL”场景），测试结束关闭。"""
+    import psycopg
+
+    conn = psycopg.connect(pg_dsn, autocommit=True)
+    try:
+        yield conn
+    finally:
+        conn.close()
+
+
+@pytest.fixture()
 def client(pg_dsn, monkeypatch):
     """每个测试拿到干净的 JobManager 与 TestClient。"""
     monkeypatch.setenv("PG_DSN", pg_dsn)

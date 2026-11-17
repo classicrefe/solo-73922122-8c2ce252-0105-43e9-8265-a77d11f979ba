@@ -34,6 +34,7 @@ services:
       MAX_DIFF_TYPES: "20"
       WORK_DIR: /tmp/recon-work
       PG_STATEMENT_TIMEOUT_MS: "28000"
+      INGEST_LOCK_TIMEOUT_MS: "20000"
     ports:
       - "8000:8000"
     volumes:
